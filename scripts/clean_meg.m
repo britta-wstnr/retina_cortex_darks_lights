@@ -1,5 +1,6 @@
 % Clean MEG data manually (data browser to look at trials)
 
+project_settings;
 for nn = 1:length(subjs)
 
     project_settings;

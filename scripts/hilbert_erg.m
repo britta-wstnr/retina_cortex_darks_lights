@@ -3,6 +3,7 @@
 %%  script-speficic specifications
 stim_def = 'on';  % this is gonna be used by nemo_hilbert_sensorlevel
 baseline = 'normal'
+project_settings;
 
 for nn = 1:length(subjs)
 

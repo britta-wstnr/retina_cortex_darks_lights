@@ -1,11 +1,12 @@
 % Prepares data for Hilbert beamforming, will results in Fig. 4
 
 plot_check = 1;
+project_settings;
 
 % Loop over subjects
 for nn = 1:length(subjs)
 
-    keep plot_check
+    keep plot_check, nn, subjs
 
     project_settings;
     display(sprintf('Processing subject %s', subjs{nn}));

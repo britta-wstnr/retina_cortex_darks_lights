@@ -1,7 +1,7 @@
 function [mri_file, update_resl, resl_new] = get_mri_file(subj_id, mri_dir)
     % Get the right file when loading MRIs, stores long filenames.
     switch subj_id
-        case 's0001'
+        case '0001'
             mri_file      = fullfile(mri_dir, 'filename.nii');
         case '0002'
             mri_file      = fullfile(mri_dir, 'filename.nii');
@@ -25,7 +25,7 @@ function [mri_file, update_resl, resl_new] = get_mri_file(subj_id, mri_dir)
             mri_file      = fullfile(mri_dir, 'filename.nii');
     end
 
-    if strcmp(subj_id, 's0006')
+    if strcmp(subj_id, '0006')
         update_resl = 1;
     else
         update_resl = 0;
