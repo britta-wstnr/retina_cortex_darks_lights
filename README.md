@@ -5,6 +5,7 @@ Britta U. Westner & Sarang S. Dalal
 
 ## Repository
 This repository contains the data analysis scripts for Darks elicit gamma-band activity in the human retina and visual cortex with narrower bandwidth and faster propagation time than lights.
+
 _This paper is submitted, a pre-print can be found_ [_here_](https://www.biorxiv.org/content/10.1101/153551v1).
 
 
