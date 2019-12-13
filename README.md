@@ -42,7 +42,16 @@ Figure 5
 * `plot_itc_traces.m`
 
 Figure 6
+* `plot_evoked_hfo.m`
+
+Figure 7
 * `plot_itc_times.m`
+
+Figure S1
+* `plot_itc_traces.m`
+
+Figure S2
+* `plot_projector_specs.m`
 
 ### Processing functions
 The folder `functions` contains several functions and scripts that are called by the scripts listed above.
