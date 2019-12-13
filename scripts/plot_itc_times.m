@@ -1,7 +1,6 @@
 % Plot ITC peaks (Fig. 6)
 
 project_settings;
-fig_dir = fullfile(base_dir, 'figures_out')
 
 %% peaks plotting, identified with plot_itc_traces.m
 
