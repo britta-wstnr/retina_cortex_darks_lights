@@ -79,12 +79,19 @@ filter_specs_off.transit_width = 6;
 
 %% Colors for plotting
 
-colors_rb = [   % colorbrewer.org -- colorblind and photocopy friendly
+colors_rb = [   % colorbrewer2.org -- colorblind and photocopy friendly
     239, 138,  98
     178,  24,  43
     103, 169, 207
      33, 102, 172] / 255;
 
+colors_granger = [
+    118,  42, 131  % for the Granger spectra
+     90, 174,  97
+    ] / 255;
+
+light_grey = [.9, .9, .9];
+grey = [.6, .6, .6];
 %% Load Fieldtrip if not yet loaded
 
 try
