@@ -80,14 +80,24 @@ tp_d = dsearchn(source_tf.time(tp_a:tp_b)', 0.1);
 my_time = source_tf.time(tp_a:tp_b);
 my_time_2 = source_tf.time(tp_c:tp_d);
 
+if strcmp(plot_it, 'ON')
+    color_brain = colors_rb(1, :);
+    color_retina = colors_rb(3, :);
+else
+    color_brain = colors_rb(2, :);
+    color_retina = colors_rb(4, :);
+end
+
 for ii = 1:length(subjs)
-    h = figure
-    for ff = 1:3  % freqbands, change to needs
-        subplot(1, 2, ff-1)
+
+    h = figure;
+    for ff = 1:4 % freqbands, change to needs
+        subplot(2, 2, ff)
+
         plot(source_tf.time(tp_a:tp_b), squeeze(retina_itc(ff, ii, :)), ...
-             'color', colors_rb(2, :), 'linewidth', 3); hold on;
+             'color', color_retina, 'linewidth', 3); hold on;
         plot(source_tf.time(tp_a:tp_b), squeeze(brain_itc(ff, ii, :)), ...
-             'color', colors_rb(4,:), 'linewidth', 3); hold on;
+             'color', color_brain, 'linewidth', 3); hold on;
 
         % identify the peaks
         [~,ret_p] = findpeaks(squeeze(retina_itc(ff, ii, :)), ...
@@ -103,13 +113,17 @@ for ii = 1:length(subjs)
         brain_t = brain_t(find(brain_t > 0));
         brain_t = brain_t(find(brain_t < .1));
 
-        set(gca, 'xlim', [-Inf Inf])
+        set(gca, 'xlim', [-0.1 Inf])
+        set(gca, 'ylim', [0, 1.0])
 
         ret_t_string = sprintf('%0.3f  ', ret_t);
         brain_t_string = sprintf('%0.3f  ', brain_t);
-        title(sprintf('%d - %d Hz; peaks retina %s; peaks brain: %s', ...
-                      freqbands(ff, 1), freqbands(ff, 2), ...
-                      ret_t_string, brain_t_string));
+        title(sprintf('%d - %d Hz', ...
+              freq_bands(ff, 1), freq_bands(ff, 2)));
+        display(sprintf(...
+                '%s, %d - %d Hz, peaks retina %s; peaks brain: %s', ...
+                subjs{ii}, freq_bands(ff, 1), freq_bands(ff, 2), ...
+                ret_t_string, brain_t_string));
 
         [max_ret(ii, ff), max_ret_idx(ii, ff)] = ...
             max(squeeze(retina_itc(ff, ii, tp_c:tp_d)));
@@ -123,14 +137,16 @@ for ii = 1:length(subjs)
         end
 
     end
-    suptitle(sprintf('ITC %s, subject %s', plot_it, subjs{ii}))
+
+    suptitle(sprintf('subject %s', subjs{ii}))
     set(gcf, 'color', [1,1,1]);
     set(h, 'Position', [100, 100, 1049, 895]);
-
+    print(h,'-dpdf', '-bestfit', '-r1000', ...
+          fullfile(fig_dir, [subjs{ii}, '_itc_', plot_it, '.pdf']))
 end
 
 
-%% plot ITC subjects (median and dispersion)
+%% plot ITC across subjects (median and dispersion)
 
 pt_min = dsearchn(source_tf.time(bt_min:bt_max)', 0);
 pt_max = dsearchn(source_tf.time(bt_min:bt_max)', 0.15);
@@ -180,4 +196,67 @@ for ff = 1:4  % freq_bands
     print(h,'-dpdf', '-bestfit', '-r1000', ...
           fullfile(fig_dir, ['itc_', plot_it, '_',  ...
                         num2str([freq_bands(ff)]), '.pdf']))
+end
+
+
+%% plot ITC across subjects (spagetti plot for supplementary)
+
+pt_min = dsearchn(source_tf.time(bt_min:bt_max)', 0);
+pt_max = dsearchn(source_tf.time(bt_min:bt_max)', 0.15);
+
+all_time = source_tf.time(bt_min:bt_max);
+peak_search_time = source_tf.time(pt_min:pt_max);
+
+if strcmp(plot_it, 'ON')
+    color_brain = colors_rb(1, :);
+    color_retina = colors_rb(3, :);
+else
+    color_brain = colors_rb(2, :);
+    color_retina = colors_rb(4, :);
+end
+
+
+for ff = 1:4  % freq_bands
+    h = figure
+    hold all
+    l(1) = plot(source_tf.time(bt_min:bt_max), ...
+                median(squeeze(retina_itc(ff, :, :))), ...
+                'color', color_retina, ...
+                'linewidth', 5);
+    for ii = 1:length(subjs)
+        l(2) = plot(source_tf.time(bt_min:bt_max), ...
+                    squeeze(retina_itc(ff, ii, :)), ...
+                    'color', color_retina, ...
+                    'linewidth', 1);
+    end
+    hold on;
+    l(3) = plot(source_tf.time(bt_min:bt_max), ...
+                median(squeeze(brain_itc(ff, :, :))), ...
+                'color', color_brain, ...
+                'linewidth', 5);
+    for ii = 1:length(subjs)
+        l(4) = plot(source_tf.time(bt_min:bt_max), ...
+                    squeeze(brain_itc(ff, ii, :)), ...
+                    'color', color_brain, ...
+                    'linewidth', 1);
+    end
+    hold on;
+    title(sprintf('%d - %d Hz', freq_bands(ff, 1), freq_bands(ff, 2)));
+    set(gca, 'ylim', [0, 1.0])
+    set(gca, 'YTick', [0:0.2:1.0]);
+    set(gca, 'FontSize', 18)
+    set(gca, 'xlim', [-Inf Inf])
+
+     if(ff == 1)
+         legend([l], {'Retina (median)', 'Retina (subjects)', ...
+             'Occipital cortex (median)', 'Retina (subjects)'}, ...
+             'location', 'northwest')
+     end
+
+    set(gcf, 'color', [1, 1, 1])
+    set(h, 'Position', [100, 100, 1049, 895]);
+
+    print(h,'-dpdf', '-bestfit', '-r1000', ...
+          fullfile(fig_dir, ['itc_', plot_it, '_',  ...
+                        num2str([freq_bands(ff)]), '_supp.pdf']))
 end
