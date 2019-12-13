@@ -39,16 +39,38 @@ light_grey = [.9, .9, .9];
 
 my_f = figure;
 hold all;
-y_axes = [1, 2.16, 3, 4];
+y_axes = [1, 2.3, 3.6, 4.6];
 x_min = 0; x_max = 100;
 
 % plot patches
-p_width = 0.3;
-for ii = 1:length(y_axes)
+for jj = 1:length(y_axes)
+    ii = y_axes(jj);
+
+    if jj == 2
+        p_width = 0.65;
+    else
+        p_width = 0.35;
+    end
+
     patch([x_min, x_max, x_max, x_min], ...
           [ii - p_width, ii - p_width, ii + p_width, ii + p_width], ...
           light_grey, 'EdgeColor', light_grey);
 end
+
+y_off = 2;
+% recalibrate y_axes for OFF responses
+y_axes(2) = 2.6;
+
+% plot the inidividual subjects
+offset_subj = 0.2;
+plot(on_brain, y_axes - offset_subj, 'color', colors(3, :), 'marker', '.', ...
+    'linestyle', 'none', 'markersize', 10);
+plot(off_brain, y_off - offset_subj, 'color', colors(4, :), 'marker', '.', ...
+    'linestyle', 'none', 'markersize', 10);
+plot(on_retina, y_axes + offset_subj, 'color', colors(1, :), 'marker', '.', ...
+    'linestyle', 'none', 'markersize', 10);
+plot(off_retina, y_off + offset_subj, 'color', colors(2, :), 'marker', '.', ...
+    'linestyle', 'none', 'markersize', 10);
 
 
 % plot the averages
@@ -57,7 +79,7 @@ p3 = errorbar(nanmedian(on_brain, 2), y_axes, iqr(on_brain, 2) ./ 2, ...
               'markeredgecolor', colors(3, :), 'markerfacecolor', ...
               colors(3, :), 'marker', 's', 'linestyle', 'none', ...
               'markersize', 14); hold on
-p4 = errorbar(nanmedian(off_brain, 2), 1.84, iqr(off_brain) ./ 2, ...
+p4 = errorbar(nanmedian(off_brain, 2), y_off, iqr(off_brain) ./ 2, ...
               'horizontal', ...
               'markeredgecolor', colors(4, :), ...
               'markerfacecolor', colors(4, :), 'marker', 'o', 'linestyle', ...
@@ -66,7 +88,7 @@ p1 = errorbar(nanmedian(on_retina, 2), y_axes, iqr(on_retina, 2) ./ 2, ...
               'horizontal', 'markeredgecolor', colors(1, :), ...
               'markerfacecolor', colors(1, :), 'marker', 's', 'linestyle', ...
               'none', 'markersize', 14); hold on
-p2 = errorbar(nanmedian(off_retina, 2), 1.84, iqr(off_retina) ./ 2, ...
+p2 = errorbar(nanmedian(off_retina, 2), y_off, iqr(off_retina) ./ 2, ...
               'horizontal', 'markeredgecolor', colors(2, :), ...
               'markerfacecolor', colors(2, :), 'marker', 'o', 'linestyle', ...
               'none', 'markersize', 11); hold on
@@ -92,9 +114,10 @@ set(gca, 'xlim', [x_min, x_max]);
 xlabel('Time (ms)')
 
 % y axis
-set(gca, 'ylim', [0, 6]);
+set(gca, 'ylim', [0, 7]);
 ax = gca;
-ax.YTick = [1:4];
+y_axes(2) = 2.3;  % recalibrate to center
+ax.YTick = y_axes;
 ax.YTickLabel = {'55-75', '75-95', '105-125', '125-145'};
 ylabel('Frequency (Hz)');
 ax.YGrid = 'on';
