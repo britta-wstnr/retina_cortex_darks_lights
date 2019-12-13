@@ -17,7 +17,7 @@ for nn = 1:length(subjs)
     for jj = 1:3
 
         meg_file = fullfile(proc_dir, ...
-                            [meg_file_base, meg_file_num{jj}, ..
+                            [meg_file_base, meg_file_num{jj}, ...
                             meg_file_ending]);
 
         cfg = [];
